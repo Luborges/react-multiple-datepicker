@@ -149,7 +149,6 @@ class DatePicker extends Component {
 
   render() {
     const { children } = this.props;
-    console.log(this.state.selectedDates.slice());
     return (
       <div>
         {children ? (

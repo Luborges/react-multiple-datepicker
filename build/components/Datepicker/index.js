@@ -154,7 +154,6 @@ function (_Component) {
     key: "render",
     value: function render() {
       var children = this.props.children;
-      console.log(this.state.selectedDates.slice());
       return _react.default.createElement("div", null, children ? _react.default.cloneElement(_react.default.Children.only(children), {
         onClick: this.toggleOpen,
         value: this.state.selectedDates.map(function (date) {

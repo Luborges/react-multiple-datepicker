@@ -71,15 +71,22 @@ class DatePicker extends Component {
   constructor(props) {
     super(props);
     const def = props.selected || new Date();
-
     this.state = {
       view: DateUtilities.clone(def),
       selected: DateUtilities.clone(def),
-      selectedDates: props.selected ? [DateUtilities.clone(def)] : [],
+      selectedDates: this.props.select || [], //[DateUtilities.clone(def)]
       minDate: null,
       maxDate: null,
       open: false,
     };
+  }
+
+  componentDidUpdate(prevProps){
+    if (prevProps.select!==this.props.select){
+      this.setState({
+        selectedDates: this.props.select,
+      });
+    }
   }
 
   onSelect = day => {
@@ -87,9 +94,20 @@ class DatePicker extends Component {
     if (DateUtilities.dateIn(selectedDates, day)) {
       this.setState({
         selectedDates: selectedDates.filter(date => !DateUtilities.isSameDay(date, day)),
+      }, () => {
+        if (this.props.onSelect){
+          this.props.onSelect(this.state.selectedDates);
+        }
       });
-    } else {
-      this.setState({ selectedDates: [...selectedDates, day] });
+    } 
+    else {
+      this.setState({ 
+        selectedDates: [...selectedDates, day] 
+      }, () => {
+        if (this.props.onSelect){
+          this.props.onSelect(this.state.selectedDates);
+        }
+      });
     }
   };
 
@@ -110,7 +128,7 @@ class DatePicker extends Component {
 
   handleOk = (e) => {
     e.preventDefault();
-    if (this.props.onSubmit) {
+    if (this.props.onSubmit){
       this.props.onSubmit(this.state.selectedDates);
     }
 
@@ -131,7 +149,7 @@ class DatePicker extends Component {
 
   render() {
     const { children } = this.props;
-
+    console.log(this.state.selectedDates.slice());
     return (
       <div>
         {children ? (
